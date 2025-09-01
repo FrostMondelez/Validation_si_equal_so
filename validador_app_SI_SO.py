@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 # Importa tu función de validación
-from Funciones_validacion_SI_igual_SO import validar_reglas_manual_file_si_igual_so
+from Funciones_validacion_SI_igual_SO_FINAL import validar_reglas_manual_file_si_igual_so
 
 st.title("Validador Automático de Archivos Manual file SI = SO")
 archivo = st.file_uploader("📂 Carga tu archivo Excel", type=["xlsx"])
@@ -23,4 +23,5 @@ if archivo:
                data=f,
                file_name="resultado_validacion.xlsx",
                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+
            )
