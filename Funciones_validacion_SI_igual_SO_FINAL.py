@@ -34,12 +34,24 @@ def validar_reglas_manual_file_si_igual_so(df, nombre_archivo):
            'Hallazgo': hallazgo
        })
    # 1. Estructura
-   faltantes = [c for c in columnas_requeridas if c not in df.columns]
-   if faltantes:
-       errores += 1
-       add('Estructura', 'Faltan columnas', ', '.join(faltantes))
+   requeridas = columnas_requeridas
+   faltantes = [c for c in requeridas if c not in df.columns]
+   sobrantes = [c for c in df.columns if c not in requeridas]
+   if faltantes or sobrantes:
+    errores += 1
+    mensajes = []
+    if faltantes:
+       mensajes.append("Faltan columnas: " + ", ".join(faltantes))
+    if sobrantes:
+       mensajes.append("Columnas no permitidas: " + ", ".join(sobrantes))
+    add('Estructura', 'Error', " ; ".join(mensajes))
    else:
-       add('Estructura', 'Estructura OK', 'No hay')
+    # Revision de orden de columnas 
+    if list(df.columns) != list(requeridas):
+       errores += 1
+       add('Estructura', 'Error', 'Orden de columnas incorrecto')
+    else:
+       add('Estructura', 'Estructura OK', 'Exacta y en orden')
    # 2. Duplicados
    duplicados = df.duplicated()
    if duplicados.any():
@@ -122,4 +134,5 @@ def validar_reglas_manual_file_si_igual_so(df, nombre_archivo):
    # 9. Resultado general
    estado = 'Archivo conforme' if errores == 0 else 'Archivo con errores'
    add('Resultado general', estado, None, regla ="Consolidado")
+
    return pd.DataFrame(resultados)
